@@ -20,6 +20,7 @@ namespace Signature
     {
         NeuralNetwork network;
         List<Neuron> initial;
+        Bitmap img;
 
         int n = 2500;
         int k = 50;
@@ -28,7 +29,7 @@ namespace Signature
         public mainDialog()
         {
             network = new NeuralNetwork(n);
-            
+
             InitializeComponent();
         }
 
@@ -75,8 +76,8 @@ namespace Signature
                         }
 
                         pictureBox1.Image = temp;
-                        
-                        for(int i = 0; i < t; i++)
+
+                        for (int i = 0; i < t; i++)
                         {
                             network.AddPattern(pattern);
                         }
@@ -94,20 +95,21 @@ namespace Signature
             network.Run(initial);
 
             List<Neuron> res = network.Neurons;
-            Bitmap temp = new Bitmap(k,k);
+            Bitmap temp = new Bitmap(k, k);
 
             int midColor = Math.Abs((int)(Color.Black.ToArgb() / 2));
 
             int i = 0;
             int j = 0;
 
-            foreach(Neuron n in res)
+            foreach (Neuron n in res)
             {
-                if(j >= k) { j = 0; i++; }
-                if(n.State == NeuronStates.AlongField)
+                if (j >= k) { j = 0; i++; }
+                if (n.State == NeuronStates.AlongField)
                 {
                     temp.SetPixel(i, j, Color.White);
-                } else
+                }
+                else
                 {
                     temp.SetPixel(i, j, Color.Black);
                 }
@@ -120,7 +122,7 @@ namespace Signature
 
         private void compare_Click(object sender, EventArgs e)
         {
-            
+
             using (OpenFileDialog openFile = new OpenFileDialog())
             {
                 openFile.Title = "Load Image";
@@ -158,6 +160,73 @@ namespace Signature
                     initial = initialState;
                 }
             }
+        }
+
+        private void pictureBox1_MouseMove(object sender, MouseEventArgs e)
+        {
+            int xMouse = e.X;
+            int yMouse = e.Y;
+
+            label1.Text = "Image 1";
+            label2.Text = "(" + xMouse.ToString() + "," + yMouse.ToString() + ")";
+
+            Bitmap img = new Bitmap(pictureBox1.ClientSize.Width, pictureBox1.Height);
+            pictureBox1.DrawToBitmap(img, pictureBox1.ClientRectangle);
+            Color pixel = img.GetPixel(xMouse, yMouse);
+            label3.Text = "GRAY: " + pixel.R.ToString();
+            img.Dispose();
+
+        }
+
+        private void pictureBox1_MouseLeave(object sender, EventArgs e)
+        {
+            label1.Text = "...";
+            label2.Text = "...";
+            label3.Text = "...";
+        }
+
+        private void pictureBox2_MouseMove(object sender, MouseEventArgs e)
+        {
+            int xMouse = e.X;
+            int yMouse = e.Y;
+
+            label1.Text = "Image 2";
+            label2.Text = "(" + xMouse.ToString() + "," + yMouse.ToString() + ")";
+
+            Bitmap img = new Bitmap(pictureBox2.ClientSize.Width, pictureBox2.Height);
+            pictureBox1.DrawToBitmap(img, pictureBox2.ClientRectangle);
+            Color pixel = img.GetPixel(xMouse, yMouse);
+            label3.Text = "GRAY: " + pixel.R.ToString();
+            img.Dispose();
+        }
+
+        private void pictureBox2_MouseLeave(object sender, EventArgs e)
+        {
+            label1.Text = "...";
+            label2.Text = "...";
+            label3.Text = "...";
+        }
+
+        private void pictureBox3_MouseMove(object sender, MouseEventArgs e)
+        {
+            int xMouse = e.X;
+            int yMouse = e.Y;
+
+            label1.Text = "Result Image";
+            label2.Text = "(" + xMouse.ToString() + "," + yMouse.ToString() + ")";
+
+            Bitmap img = new Bitmap(pictureBox3.ClientSize.Width, pictureBox3.Height);
+            pictureBox1.DrawToBitmap(img, pictureBox3.ClientRectangle);
+            Color pixel = img.GetPixel(xMouse, yMouse);
+            label3.Text = "GRAY: " + pixel.R.ToString();
+            img.Dispose();
+        }
+
+        private void pictureBox3_MouseLeave(object sender, EventArgs e)
+        {
+            label1.Text = "...";
+            label2.Text = "...";
+            label3.Text = "...";
         }
     }
 }
